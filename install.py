@@ -23,7 +23,7 @@ BLUE = "\033[34m"
 MAGENTA = "\033[35m"
 CYAN = "\033[36m"
 
-REPO_URL = "https://github.com/duma799/hyprduma-config.git"
+REPO_URL = "https://github.com/duma799/hyprland-config.git"
 
 PACMAN_PACKAGES = [
     "git", "hyprland", "hyprlock", "hyprshot", "kitty", "swaybg",
@@ -174,9 +174,9 @@ def install_aur_helpers():
             return helper
     if not ask_yn("Build yay to install the required AUR packages?"):
         raise InstallError("Required AUR packages need yay or paru; install them manually and rerun")
-    require_run(["sudo", "pacman", "-S", "--needed", "--noconfirm", "git", "base-devel"],
+    require_run(["sudo", "pacman", "-Syu", "--needed", "--noconfirm", "git", "base-devel"],
                 "Could not install prerequisites for yay")
-    with tempfile.TemporaryDirectory(prefix="hyprduma-yay-") as directory:
+    with tempfile.TemporaryDirectory(prefix="hyprland-config-yay-") as directory:
         source = Path(directory) / "yay"
         require_run(["git", "clone", "https://aur.archlinux.org/yay.git", str(source)],
                     "Could not clone yay")
@@ -197,7 +197,7 @@ def install_packages(include_nvim=True, include_fastfetch=True):
     if not ask_yn("Install required official and AUR packages?"):
         print_info("Package installation skipped; installed dependencies will still be checked")
         return False
-    require_run(["sudo", "pacman", "-S", "--needed", "--noconfirm", *packages],
+    require_run(["sudo", "pacman", "-Syu", "--needed", "--noconfirm", *packages],
                 "Required official package installation failed; configs were not replaced")
     helper = install_aur_helpers()
     require_run([helper, "-S", "--needed", "--noconfirm", *AUR_PACKAGES],
@@ -254,7 +254,7 @@ def ensure_git():
         return
     if not ask_yn("Git is required to clone the repository. Install git?"):
         raise InstallError("Cannot clone the repository without git")
-    require_run(["sudo", "pacman", "-S", "--needed", "--noconfirm", "git"],
+    require_run(["sudo", "pacman", "-Syu", "--needed", "--noconfirm", "git"],
                 "Git installation failed")
     if not cmd_exists("git"):
         raise InstallError("git is unavailable after installation")
@@ -265,7 +265,7 @@ def clone_repo():
     if repo:
         print_ok(f"Using repo at: {repo}")
         return repo
-    target = Path.home() / "hyprduma-config"
+    target = Path.home() / "hyprland-config"
     try:
         validate_repo(target)
     except InstallError:
@@ -275,7 +275,7 @@ def clone_repo():
         return target
     ensure_git()
     # Keep any old checkout untouched until a complete replacement has been cloned.
-    with tempfile.TemporaryDirectory(prefix=".hyprduma-clone-", dir=target.parent) as directory:
+    with tempfile.TemporaryDirectory(prefix=".hyprland-config-clone-", dir=target.parent) as directory:
         staged = Path(directory) / "repo"
         require_run(["git", "clone", REPO_URL, str(staged)], "Repository clone failed; existing checkout is unchanged")
         validate_repo(staged)
@@ -311,7 +311,7 @@ def write_preserving(path, content):
     if path.is_file() and path.read_text() == content:
         return False
     path.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.NamedTemporaryFile(mode="w", dir=path.parent, prefix=".hyprduma-", delete=False) as stream:
+    with tempfile.NamedTemporaryFile(mode="w", dir=path.parent, prefix=".hyprland-config-", delete=False) as stream:
         temporary = Path(stream.name)
         stream.write(content)
     backup = None
@@ -342,7 +342,7 @@ def prepare_waypaper_config(repo):
     if not settings.get("folder"):
         settings["folder"] = str(repo / "wallpapers")
     # Use the coordinator's wallpaper parser so multi-monitor settings behave identically.
-    spec = importlib.util.spec_from_file_location("hyprduma_theme", repo / "scripts" / "theme.py")
+    spec = importlib.util.spec_from_file_location("hyprland_config_theme", repo / "scripts" / "theme.py")
     theme = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = theme
     spec.loader.exec_module(theme)
@@ -440,13 +440,13 @@ def prepare_bashrc(config_dir):
     content = bashrc.read_text() if bashrc.exists() else ""
     script = shlex.quote(str(config_dir / "hypr" / "scripts" / "pywal.sh"))
     snippet = (
-        "# BEGIN hyprduma pywal\n"
+        "# BEGIN hyprland-config pywal\n"
         "# Import pywal colorscheme from cache\n"
         '[ -f "${XDG_CACHE_HOME:-$HOME/.cache}/wal/sequences" ] && cat "${XDG_CACHE_HOME:-$HOME/.cache}/wal/sequences"\n'
         'source "${XDG_CACHE_HOME:-$HOME/.cache}/wal/colors-tty.sh" 2>/dev/null\n'
         "unalias pywal 2>/dev/null || true\n"
         f"pywal() {{ {script} \"$@\"; }}\n"
-        "# END hyprduma pywal\n"
+        "# END hyprland-config pywal\n"
     )
     legacy = (
         "# Import pywal colorscheme from cache\n"
@@ -456,8 +456,9 @@ def prepare_bashrc(config_dir):
         "\n# Alias for pywal color generator\n"
         "alias pywal='~/.config/hypr/scripts/pywal.sh'\n"
     )
-    if "# BEGIN hyprduma pywal\n" in content:
-        updated, count = re.subn(r"(?m)^# BEGIN hyprduma pywal\n.*?^# END hyprduma pywal(?:\n|$)",
+    # Blocks written before the rename used the "hyprduma" marker.
+    if re.search(r"(?m)^# BEGIN (?:hyprland-config|hyprduma) pywal$", content):
+        updated, count = re.subn(r"(?m)^# BEGIN (hyprland-config|hyprduma) pywal\n.*?^# END \1 pywal(?:\n|$)",
                                 lambda match: snippet, content, flags=re.DOTALL)
         if count != 1:
             raise InstallError("The managed pywal block in .bashrc is incomplete or duplicated")
@@ -489,12 +490,15 @@ def install_nvim_config(repo):
 
 def print_banner():
     print(f"""{CYAN}{BOLD}
-        
-▄▄ ▄▄ ▄▄ ▄▄ ▄▄▄▄  ▄▄▄▄  ▄▄▄▄  ▄▄ ▄▄ ▄▄   ▄▄  ▄▄▄  
-██▄██ ▀███▀ ██▄█▀ ██▄█▄ ██▀██ ██ ██ ██▀▄▀██ ██▀██ 
-██ ██   █   ██    ██ ██ ████▀ ▀███▀ ██   ██ ██▀██ 
-        
-               Auto-Installer{RESET}
+▄▄ ▄▄ ▄▄ ▄▄ ▄▄▄▄  ▄▄▄▄  ▄▄     ▄▄▄  ▄▄  ▄▄ ▄▄▄▄
+██▄██ ▀███▀ ██▄█▀ ██▄█▄ ██    ██▀██ ███▄██ ██▀██
+██ ██   █   ██    ██ ██ ██▄▄▄ ██▀██ ██ ▀██ ████▀
+
+        ▄▄▄▄  ▄▄▄  ▄▄  ▄▄ ▄▄▄▄▄ ▄▄  ▄▄▄▄
+       ██▀▀▀ ██▀██ ███▄██ ██▄▄  ██ ██ ▄▄
+       ▀████ ▀███▀ ██ ▀██ ██    ██ ▀███▀
+
+        hyprland-config Auto-Installer{RESET}
 """)
 
 

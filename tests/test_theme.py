@@ -28,7 +28,7 @@ class Colour:
 
 class ThemeTests(unittest.TestCase):
     def setUp(self):
-        temporary = tempfile.TemporaryDirectory(prefix="hyprduma-theme-tests-")
+        temporary = tempfile.TemporaryDirectory(prefix="hyprland-config-theme-tests-")
         self.addCleanup(temporary.cleanup)
         self.home = Path(temporary.name).resolve()
         self.environ = {

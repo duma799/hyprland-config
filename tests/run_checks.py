@@ -14,7 +14,7 @@ def main():
     for command in ("nvim", "bash"):
         if not shutil.which(command):
             raise SystemExit(f"Required for these checks: {command}")
-    with tempfile.TemporaryDirectory(prefix="hyprduma-checks-") as temporary:
+    with tempfile.TemporaryDirectory(prefix="hyprland-config-checks-") as temporary:
         env = dict(os.environ, HOME=temporary, XDG_CONFIG_HOME=temporary + "/config",
                    XDG_DATA_HOME=temporary + "/data", XDG_STATE_HOME=temporary + "/state",
                    XDG_CACHE_HOME=temporary + "/cache", XDG_RUNTIME_DIR=temporary + "/runtime",

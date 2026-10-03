@@ -1,4 +1,4 @@
-# neoduma-config
+# hyprland-config — Neovim
 
 My Neovim configuration built with [lazy.nvim](https://github.com/folke/lazy.nvim).
 
@@ -180,7 +180,7 @@ Theme switching saves the active theme in Neovim's state directory, so it persis
 ## Install
 
 This directory was imported from the Mac configuration in `~/.config/nvim`.
-Run `python3 install.py` from the Hyprduma repository and enable Neovim installation.
+Run `python3 install.py` from the hyprland-config repository and enable Neovim installation.
 The original Mac configuration is unchanged.
 
 On first launch, lazy.nvim installs the locked plugins and builds the configured

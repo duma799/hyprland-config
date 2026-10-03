@@ -14,7 +14,7 @@ Back up the affected configuration before copying:
 
 ```bash
 hypr_config_root="${XDG_CONFIG_HOME:-$HOME/.config}"
-hypr_setup_backup="$(mktemp -d "$HOME/hyprduma-pywal-backup.XXXXXX")"
+hypr_setup_backup="$(mktemp -d "$HOME/hyprland-config-pywal-backup.XXXXXX")"
 for item in wal kitty waypaper; do
     if [ -e "$hypr_config_root/$item" ]; then
         cp -aL "$hypr_config_root/$item" "$hypr_setup_backup/$item"
@@ -142,10 +142,10 @@ from the requested light/dark mode. Refresh with `pywal` after changing template
 Default generated locations:
 
 - `~/.cache/wal/`: palette exports and `hyprland-colors.lua`.
-- `~/.local/state/hyprduma/theme.json`: saved image and mode.
+- `~/.local/state/hyprland-config/theme.json`: saved image and mode.
 - `~/.local/state/caelestia/scheme.json`: published shell palette.
 - `~/.local/state/caelestia/wallpaper/`: current image link and `path.txt`.
-- `$XDG_RUNTIME_DIR/hyprduma/`: queue and locks, falling back to the cache root.
+- `$XDG_RUNTIME_DIR/hyprland-config/`: queue and locks, falling back to the cache root.
 
 Cache, config, and state paths honor the corresponding XDG environment variables.
 
@@ -159,8 +159,8 @@ If a saved image was moved, provide its new path. If the saved theme JSON itself
 was manually damaged, move it aside before selecting a new image:
 
 ```bash
-mv "${XDG_STATE_HOME:-$HOME/.local/state}/hyprduma/theme.json" \
-   "${XDG_STATE_HOME:-$HOME/.local/state}/hyprduma/theme.json.invalid"
+mv "${XDG_STATE_HOME:-$HOME/.local/state}/hyprland-config/theme.json" \
+   "${XDG_STATE_HOME:-$HOME/.local/state}/hyprland-config/theme.json.invalid"
 ```
 
 For wallpaper recovery without generating another theme:

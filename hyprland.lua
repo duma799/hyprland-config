@@ -56,8 +56,8 @@ hl.env("XCURSOR_SIZE", "24")
 
 hl.config({
     general = {
-        gaps_in = 10,
-        gaps_out = 40,
+        gaps_in = 2,
+        gaps_out = 4,
         border_size = 3,
         resize_on_border = false,
         allow_tearing = false,
@@ -65,7 +65,7 @@ hl.config({
     },
 
     decoration = {
-        rounding = 13,
+        rounding = 0,
         active_opacity = 0.985,
         inactive_opacity = 0.85,
         blur = {

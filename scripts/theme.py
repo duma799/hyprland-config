@@ -38,11 +38,11 @@ def state_dir():
 
 
 def theme_state_path():
-    return state_dir() / "hyprduma" / "theme.json"
+    return state_dir() / "hyprland-config" / "theme.json"
 
 
 def runtime_dir():
-    root = Path(os.environ.get("XDG_RUNTIME_DIR") or cache_dir().parent) / "hyprduma"
+    root = Path(os.environ.get("XDG_RUNTIME_DIR") or cache_dir().parent) / "hyprland-config"
     root.mkdir(parents=True, exist_ok=True, mode=0o700)
     if root.is_symlink() or root.stat().st_uid != os.getuid():
         raise ThemeError(f"Runtime directory is not owned by this user: {root}")

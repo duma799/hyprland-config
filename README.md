@@ -1,7 +1,11 @@
-# HyprDuma
+# hyprland-config
 
 Personal Arch Linux desktop configuration: Hyprland Lua, Waypaper/Pywal colors,
 optional Caelestia shell, Kitty, Fastfetch, and the Neovim setup imported from my Mac.
+
+Windows are square (no rounding) with tight gaps: 4 px between windows and
+between windows and the screen edge. Change `gaps_in`, `gaps_out`, and
+`rounding` in [`hyprland.lua`](hyprland.lua) to adjust them.
 
 - [Installation and recovery](docs/README.md)
 - [Verified package names and sources](docs/PACKAGES.md)
@@ -10,12 +14,14 @@ optional Caelestia shell, Kitty, Fastfetch, and the Neovim setup imported from m
 - [Neovim features, shortcuts, and dependencies](config/nvim/README.md)
 - [Development checks](docs/TESTING.md)
 
+## Install
+
 Install on Arch Linux with Python 3; Hyprland 0.55+ is required. The optional
 Neovim configuration requires Neovim 0.12+ and tree-sitter-cli 0.26.1+.
 
 ```bash
-git clone https://github.com/duma799/hyprduma-config.git ~/hyprduma-config
-python3 ~/hyprduma-config/install.py
+git clone https://github.com/duma799/hyprland-config.git ~/hyprland-config
+python3 ~/hyprland-config/install.py
 ```
 
 The installer checks dependencies and theme generation before activating the

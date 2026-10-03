@@ -16,7 +16,7 @@ SPEC.loader.exec_module(installer)
 
 class InstallerTests(unittest.TestCase):
     def setUp(self):
-        self.directory = tempfile.TemporaryDirectory(prefix="hyprduma-installer-test-")
+        self.directory = tempfile.TemporaryDirectory(prefix="hyprland-config-installer-test-")
         self.addCleanup(self.directory.cleanup)
         self.home = Path(self.directory.name) / "home with % space"
         self.home.mkdir()
@@ -143,7 +143,7 @@ class InstallerTests(unittest.TestCase):
         complete.assert_not_called()
 
     def test_clone_failure_leaves_personal_checkout_in_place(self):
-        old = self.home / "hyprduma-config"
+        old = self.home / "hyprland-config"
         old.mkdir()
         (old / "hyprland.conf").write_text("personal changes")
         with patch.object(installer, "find_repo_dir", return_value=None), \
@@ -152,15 +152,15 @@ class InstallerTests(unittest.TestCase):
             with self.assertRaisesRegex(installer.InstallError, "clone failed"):
                 installer.clone_repo()
         self.assertEqual((old / "hyprland.conf").read_text(), "personal changes")
-        self.assertFalse(list(self.home.glob("hyprduma-config.backup*")))
-        self.assertFalse(list(self.home.glob(".hyprduma-clone-*")))
+        self.assertFalse(list(self.home.glob("hyprland-config.backup*")))
+        self.assertFalse(list(self.home.glob(".hyprland-config-clone-*")))
 
     def test_successful_clone_preserves_old_checkout_with_numbered_backup(self):
         source = self.repository("complete source")
-        old = self.home / "hyprduma-config"
+        old = self.home / "hyprland-config"
         old.mkdir()
         (old / "hyprland.conf").write_text("personal changes")
-        old.with_name("hyprduma-config.backup").write_text("older backup")
+        old.with_name("hyprland-config.backup").write_text("older backup")
 
         def clone(command):
             import shutil
@@ -170,13 +170,13 @@ class InstallerTests(unittest.TestCase):
         with patch.object(installer, "find_repo_dir", return_value=None), \
              patch.object(installer, "ensure_git"), patch.object(installer, "run", side_effect=clone):
             self.assertEqual(installer.clone_repo(), old)
-        self.assertEqual((self.home / "hyprduma-config.backup.1/hyprland.conf").read_text(), "personal changes")
-        self.assertEqual((self.home / "hyprduma-config.backup").read_text(), "older backup")
+        self.assertEqual((self.home / "hyprland-config.backup.1/hyprland.conf").read_text(), "personal changes")
+        self.assertEqual((self.home / "hyprland-config.backup").read_text(), "older backup")
         installer.validate_repo(old)
 
     def test_failed_clone_activation_restores_original_checkout(self):
         source = self.repository("complete source")
-        target = self.home / "hyprduma-config"
+        target = self.home / "hyprland-config"
         target.mkdir()
         (target / "private.txt").write_text("keep")
         rename = Path.rename
@@ -197,10 +197,10 @@ class InstallerTests(unittest.TestCase):
             with self.assertRaisesRegex(OSError, "simulated rename error"):
                 installer.clone_repo()
         self.assertEqual((target / "private.txt").read_text(), "keep")
-        self.assertFalse(list(self.home.glob("hyprduma-config.backup*")))
+        self.assertFalse(list(self.home.glob("hyprland-config.backup*")))
 
     def test_invalid_clone_never_moves_existing_checkout(self):
-        target = self.home / "hyprduma-config"
+        target = self.home / "hyprland-config"
         target.mkdir()
         (target / "private.txt").write_text("keep")
         with patch.object(installer, "find_repo_dir", return_value=None), \
@@ -377,7 +377,7 @@ class InstallerTests(unittest.TestCase):
         bashrc.write_text(original)
         installer.update_bashrc(installer.config_home())
         updated = bashrc.read_text()
-        self.assertIn("# BEGIN hyprduma pywal", updated)
+        self.assertIn("# BEGIN hyprland-config pywal", updated)
         self.assertIn("XDG_CACHE_HOME", updated)
         self.assertIn("config with % space", updated)
         self.assertNotIn("alias pywal=", updated)
@@ -388,6 +388,7 @@ class InstallerTests(unittest.TestCase):
         self.assertFalse(bashrc.with_name(".bashrc.backup.1").exists())
         self.assertTrue(installer.run(["bash", "-n", str(bashrc)]))
 
+<<<<<<< HEAD
     def test_bashrc_can_be_sourced_with_loaded_legacy_alias_and_no_cache(self):
         installer.update_bashrc(installer.config_home())
         result = subprocess.run(
@@ -398,11 +399,22 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stderr, "")
         self.assertEqual(result.stdout.strip(), "function")
+=======
+    def test_managed_bashrc_replaces_block_with_previous_project_name(self):
+        bashrc = self.home / ".bashrc"
+        bashrc.write_text("export PERSONAL=1\n# BEGIN hyprduma pywal\nold\n# END hyprduma pywal\nexport OTHER=2\n")
+        installer.update_bashrc(installer.config_home())
+        updated = bashrc.read_text()
+        self.assertNotIn("hyprduma", updated)
+        self.assertEqual(updated.count("# BEGIN hyprland-config pywal"), 1)
+        self.assertIn("export PERSONAL=1", updated)
+        self.assertIn("export OTHER=2", updated)
+>>>>>>> 4c2d029 (Rename project to hyprland-config, square windows, tight gaps)
 
     def test_incomplete_managed_bashrc_block_fails_during_preflight(self):
         repo = self.repository()
         bashrc = self.home / ".bashrc"
-        bashrc.write_text("# BEGIN hyprduma pywal\nmissing end marker\n")
+        bashrc.write_text("# BEGIN hyprland-config pywal\nmissing end marker\n")
         with patch.object(installer, "cmd_exists", return_value=True), \
              patch.object(installer, "check_lua_config_support"), \
              patch.object(installer, "run", return_value=True) as run:

@@ -20,7 +20,7 @@ with patch.dict(sys.modules, {"theme": THEME}):
 
 class MonitorHandlerTests(unittest.TestCase):
     def setUp(self):
-        temporary = tempfile.TemporaryDirectory(prefix="hyprduma-monitor-test-")
+        temporary = tempfile.TemporaryDirectory(prefix="hyprland-config-monitor-test-")
         self.addCleanup(temporary.cleanup)
         self.home = Path(temporary.name)
         environment = {

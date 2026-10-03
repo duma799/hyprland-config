@@ -16,8 +16,8 @@ install, and the documented backup recovery procedure.
 After the experimental branch is pushed, the test machine can obtain it with:
 
 ```sh
-git clone --branch codex/experimental https://github.com/duma799/hyprduma-config.git
-cd hyprduma-config
+git clone --branch codex/experimental https://github.com/duma799/hyprland-config.git
+cd hyprland-config
 ```
 
 Run the automated checks first, then follow the installer and desktop checks

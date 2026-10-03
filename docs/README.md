@@ -1,4 +1,4 @@
-# HyprDuma installation
+# hyprland-config installation
 
 This is an Arch Linux desktop configuration. Hyprland uses Lua and requires
 version 0.55 or newer. The optional Neovim setup requires Neovim 0.12 or newer
@@ -13,8 +13,8 @@ settings in `hyprland.lua` for your hardware.
 Run as your normal user on Arch, with sudo available:
 
 ```bash
-git clone https://github.com/duma799/hyprduma-config.git ~/hyprduma-config
-python3 ~/hyprduma-config/install.py
+git clone https://github.com/duma799/hyprland-config.git ~/hyprland-config
+python3 ~/hyprland-config/install.py
 ```
 
 The installer asks whether to include Neovim and Fastfetch, installs required
