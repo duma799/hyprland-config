@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install the Arch desktop config after dependencies and theme generation succeed."""
+"""Install hyprland-config after dependencies and theme generation succeed."""
 
 import configparser
 import importlib.util

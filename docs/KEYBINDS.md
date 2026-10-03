@@ -1,4 +1,4 @@
-# Hyprland Keybinds Cheatsheet
+# hyprland-config keybinds cheatsheet
 
 ## Quick Reference Guide
 

@@ -1,7 +1,8 @@
 # hyprland-config
 
-Personal Arch Linux desktop configuration: Hyprland Lua, Waypaper/Pywal colors,
-optional Caelestia shell, Kitty, Fastfetch, and the Neovim setup imported from my Mac.
+hyprland-config is a personal Arch Linux Hyprland desktop configuration:
+Hyprland Lua, Waypaper/Pywal colors, optional Caelestia shell, Kitty, Fastfetch,
+and the Neovim setup imported from my Mac.
 
 Windows are square (no rounding) with tight gaps: 4 px between windows and
 between windows and the screen edge. Change `gaps_in`, `gaps_out`, and

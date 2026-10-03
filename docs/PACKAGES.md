@@ -1,4 +1,4 @@
-# Installer package audit
+# hyprland-config installer package audit
 
 Verified on 2026-09-05 against the live Arch package search API and AUR RPC API.
 All 30 official package targets and all 6 AUR/helper names exist. No installer

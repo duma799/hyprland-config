@@ -1,6 +1,6 @@
 # hyprland-config installation
 
-This is an Arch Linux desktop configuration. Hyprland uses Lua and requires
+hyprland-config is an Arch Linux Hyprland desktop configuration. Hyprland uses Lua and requires
 version 0.55 or newer. The optional Neovim setup requires Neovim 0.12 or newer
 and tree-sitter-cli 0.26.1 or newer.
 

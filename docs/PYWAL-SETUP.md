@@ -1,4 +1,4 @@
-# Wallpaper and Pywal integration
+# hyprland-config wallpaper and Pywal integration
 
 The installer performs this setup. Use this guide to understand the workflow or
 add the integration to an existing Hyprland installation. Commands below run on

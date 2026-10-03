@@ -1,4 +1,4 @@
-# Validation
+# hyprland-config validation
 
 ## Experimental branch and release gate
 
@@ -86,7 +86,7 @@ installs packages and replaces the selected user's configuration.
 ## Arch terminal investigation — 2026-09-05
 
 Inspected experimental baseline `b21eaae` against the actual installation in
-`/home/duma/hyprduma-config`, which was still on **master at `1f9568f`**.
+the home-directory checkout, which was still on **master at `1f9568f`**.
 An isolated `codex/experimental` worktree was used because live configuration
 symlinks point into the master checkout; switching it would immediately change
 active files and leave the old Hyprland config link dangling.
