@@ -388,7 +388,6 @@ class InstallerTests(unittest.TestCase):
         self.assertFalse(bashrc.with_name(".bashrc.backup.1").exists())
         self.assertTrue(installer.run(["bash", "-n", str(bashrc)]))
 
-<<<<<<< HEAD
     def test_bashrc_can_be_sourced_with_loaded_legacy_alias_and_no_cache(self):
         installer.update_bashrc(installer.config_home())
         result = subprocess.run(
@@ -399,7 +398,7 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stderr, "")
         self.assertEqual(result.stdout.strip(), "function")
-=======
+
     def test_managed_bashrc_replaces_block_with_previous_project_name(self):
         bashrc = self.home / ".bashrc"
         bashrc.write_text("export PERSONAL=1\n# BEGIN hyprduma pywal\nold\n# END hyprduma pywal\nexport OTHER=2\n")
@@ -409,7 +408,6 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(updated.count("# BEGIN hyprland-config pywal"), 1)
         self.assertIn("export PERSONAL=1", updated)
         self.assertIn("export OTHER=2", updated)
->>>>>>> 4c2d029 (Rename project to hyprland-config, square windows, tight gaps)
 
     def test_incomplete_managed_bashrc_block_fails_during_preflight(self):
         repo = self.repository()
