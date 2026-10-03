@@ -47,7 +47,7 @@ class InstallerTests(unittest.TestCase):
                 installer.install_packages()
         helper.assert_not_called()
         command = run.call_args.args[0]
-        self.assertEqual(command[:3], ["sudo", "pacman", "-S"])
+        self.assertEqual(command[:3], ["sudo", "pacman", "-Syu"])
         self.assertTrue(set(installer.AUR_PACKAGES).isdisjoint(command))
 
     def test_aur_failure_propagates_and_package_sources_are_separate(self):
@@ -85,7 +85,7 @@ class InstallerTests(unittest.TestCase):
              patch.object(installer, "ask_yn", return_value=True), \
              patch.object(installer, "run", return_value=True) as run:
             installer.ensure_git()
-        self.assertEqual(run.call_args.args[0], ["sudo", "pacman", "-S", "--needed", "--noconfirm", "git"])
+        self.assertEqual(run.call_args.args[0], ["sudo", "pacman", "-Syu", "--needed", "--noconfirm", "git"])
 
     def test_missing_unreadable_unparseable_and_old_hyprland_fail(self):
         for output in (None, "", "version unknown", "Hyprland v0.54.3"):
